@@ -1,18 +1,19 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-exports.authAdmin = (req, res, next) => {
-  const token = req.headers.authorization;
+export const authAdmin = (req, res, next) => {
+  const token = req.headers.authorization.replace("Bearer ", "");
   console.log(token);
   if (!token) {
-    return res.status(401).json({ message: "Access denied!" });
+    return res.status(401).json({ mess: "Access denied!" });
   }
   try {
-    // verify admin access token
-    const key = process.env.SECRET_KEY;
-    const dToken = jwt.verify(token, key);
-    // console.log(dToken);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.decoded = decoded;
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Invalid token!" });
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ mess: "Token has expired!", error });
+    }
+    return res.status(403).json({ error });
   }
 };

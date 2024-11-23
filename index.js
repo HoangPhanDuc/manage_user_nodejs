@@ -1,21 +1,21 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import "dotenv/config";
 
-const auth = require("./routers/auth");
-const users = require("./routers/users");
+import admin from "./routes/auth.js";
+import user from "./routes/users.js";
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use("/", users);
-app.use("/", auth);
+app.use("/api/v1/", user);
+app.use("/api/v1/", admin);
 
 const port = process.env.PORT;
 
-app.listen(port, () => {git remote add origin https://github.com/HoangPhanDuc/manager_user_reactjs.git
-  console.log(`serrver is running on port ${port}!`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}!`);
 });
